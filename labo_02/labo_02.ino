@@ -1,16 +1,53 @@
+const int ledPins[] = {8, 9, 10, 11};  // Tableau des numéros de broches
+int potentiometerPin = A1;           
+int potentiometerValue = 0;          
+int ledIndex = 0;                   // Index du DEL allume
+int pinButton = 2;
+
 unsigned long currentTime = 0;
+unsigned long serialPrevious = 0;
+int serialDelay = 1000;
+
+int mappedIndex = 0;
+int mappedSymbol = 0;
 
 void setup() {
   Serial.begin(9600);
-
-  // Ton code ici
-
-
-
-  Serial.println("Setup completed");
+  pinMode(pinButton, INPUT_PULLUP);
+  for (int i = 0; i < 4; i++) {
+    // Initialisation des DEL en sortie
+    pinMode(ledPins[i], OUTPUT); 
+  }
 }
 
 void loop() {
   currentTime = millis();
 
+  potentiometerValue = analogRead(potentiometerPin);
+  mappedIndex = map (potentiometerValue, 0, 1023, 0, 3);
+  mappedSymbol = map (potentiometerValue, 0, 1023, 0, 19);
+
+  for (int i = 0; i < 4; i++) {
+    if (i == mappedIndex) {
+      digitalWrite(ledPins[i], HIGH);
+    }
+    else {
+      digitalWrite(ledPins[i], LOW);
+    }
+  }
+
+  for (int i = 0; i < 20; i++) {
+    if (i < mappedSymbol) {
+      Serial.print("#");
+    }
+    else {
+      Serial.print(".");
+    }
+  }
+
+  if (currentTime - serialPrevious >= serialDelay) {
+    serialPrevious = currentTime;
+    Serial.print("Valeur : ");
+    Serial.println(potentiometerValue);    
+  }  
 }
