@@ -27,14 +27,9 @@ void loop() {
   mappedIndex = map (potentiometerValue, 0, 1023, 0, 3);
   mappedSymbol = map (potentiometerValue, 0, 1023, 0, 19);
 
-  for (int i = 0; i < 4; i++) {
-    if (i == mappedIndex) {
-      digitalWrite(ledPins[i], HIGH);
-    }
-    else {
-      digitalWrite(ledPins[i], LOW);
-    }
-  }
+  int valeurButton = digitalRead(pinButton);
+
+if (valeurButton == 0) {
 
   for (int i = 0; i < 20; i++) {
     if (i < mappedSymbol) {
@@ -44,6 +39,16 @@ void loop() {
       Serial.print(".");
     }
   }
+}
+  for (int i = 0; i < 4; i++) {
+    if (i == mappedIndex) {
+      digitalWrite(ledPins[i], HIGH);
+    }
+    else {
+      digitalWrite(ledPins[i], LOW);
+    }
+  }
+
 
   if (currentTime - serialPrevious >= serialDelay) {
     serialPrevious = currentTime;
