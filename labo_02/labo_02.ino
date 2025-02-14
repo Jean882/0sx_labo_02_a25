@@ -10,6 +10,7 @@ int serialDelay = 1000;
 
 int mappedIndex = 0;
 int mappedSymbol = 0;
+int mappedPourcentage = 0;
 
 void setup() {
   Serial.begin(9600);
@@ -26,20 +27,10 @@ void loop() {
   potentiometerValue = analogRead(potentiometerPin);
   mappedIndex = map (potentiometerValue, 0, 1023, 0, 3);
   mappedSymbol = map (potentiometerValue, 0, 1023, 0, 19);
+  mappedPourcentage = map (potentiometerValue, 0, 1023, 0, 100);
 
   int valeurButton = digitalRead(pinButton);
 
-if (valeurButton == 0) {
-
-  for (int i = 0; i < 20; i++) {
-    if (i < mappedSymbol) {
-      Serial.print("#");
-    }
-    else {
-      Serial.print(".");
-    }
-  }
-}
   for (int i = 0; i < 4; i++) {
     if (i == mappedIndex) {
       digitalWrite(ledPins[i], HIGH);
@@ -52,7 +43,18 @@ if (valeurButton == 0) {
 
   if (currentTime - serialPrevious >= serialDelay) {
     serialPrevious = currentTime;
-    Serial.print("Valeur : ");
-    Serial.println(potentiometerValue);    
+    if (valeurButton == 0) {
+
+      for (int i = 0; i < 20; i++) {
+        if (i < mappedSymbol) {
+          Serial.print("#");
+        }
+        else {
+          Serial.print(".");
+        }
+      }   
+    }
+    Serial.print(mappedPourcentage);    
+    Serial.println(" % ");
   }  
 }
