@@ -53,8 +53,8 @@ void loop() {
           Serial.print(".");
         }
       }   
+      Serial.print(mappedPourcentage);    
+      Serial.println(" % ");
     }
-    Serial.print(mappedPourcentage);    
-    Serial.println(" % ");
   }  
 }
