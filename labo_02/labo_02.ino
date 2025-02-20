@@ -21,6 +21,7 @@ void setup() {
   }
 }
 
+
 void loop() {
   currentTime = millis();
 
@@ -29,7 +30,9 @@ void loop() {
   mappedSymbol = map (potentiometerValue, 0, 1023, 0, 19);
   mappedPourcentage = map (potentiometerValue, 0, 1023, 0, 100);
 
-  int valeurButton = digitalRead(pinButton);
+  
+  int valueButton = digitalRead(pinButton);
+  
 
   for (int i = 0; i < 4; i++) {
     if (i == mappedIndex) {
@@ -43,7 +46,7 @@ void loop() {
 
   if (currentTime - serialPrevious >= serialDelay) {
     serialPrevious = currentTime;
-    if (valeurButton == 0) {
+    if (valueButton == 0) {
 
       for (int i = 0; i < 20; i++) {
         if (i < mappedSymbol) {
