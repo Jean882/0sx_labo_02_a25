@@ -22,6 +22,33 @@ void setup() {
 }
 
 
+int estClic(unsigned long ct) {
+  static unsigned long lastTime = 0;
+  static int lastState = HIGH;
+  const int rate = 50;
+  int clic = 0;
+
+  if (ct - lastTime < rate) {
+    return clic; // Trop rapide
+  }
+
+  lastTime = ct;
+
+  int state = digitalRead(pinButton);
+
+  if (state == LOW) {
+    if (lastState == HIGH) {
+      clic = 1;
+    }
+  }
+
+  lastState = state;
+
+  return clic;
+}
+
+
+
 void loop() {
   currentTime = millis();
 
