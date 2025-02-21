@@ -21,30 +21,17 @@ void setup() {
   }
 }
 
-
-int estClic(unsigned long ct) {
-  static unsigned long lastTime = 0;
-  static int lastState = HIGH;
-  const int rate = 50;
-  int clic = 0;
-
-  if (ct - lastTime < rate) {
-    return clic; // Trop rapide
-  }
-
-  lastTime = ct;
-
-  int state = digitalRead(pinButton);
-
-  if (state == LOW) {
-    if (lastState == HIGH) {
-      clic = 1;
+int click(int valueButton, int mappedPourcentage, int mappedSymbol) {
+  for (int i = 0; i < 20; i++) {
+    if (i < mappedSymbol) {
+      Serial.print("#");
     }
-  }
-
-  lastState = state;
-
-  return clic;
+    else {
+      Serial.print(".");
+    }
+  }   
+  Serial.print(mappedPourcentage);    
+  Serial.println(" % ");  
 }
 
 
@@ -52,11 +39,12 @@ int estClic(unsigned long ct) {
 void loop() {
   currentTime = millis();
 
-  potentiometerValue = analogRead(potentiometerPin);
-  mappedIndex = map (potentiometerValue, 0, 1023, 0, 3);
-  mappedSymbol = map (potentiometerValue, 0, 1023, 0, 19);
-  mappedPourcentage = map (potentiometerValue, 0, 1023, 0, 100);
+  int potentiometerValue = analogRead(potentiometerPin);
+  int mappedIndex = map (potentiometerValue, 0, 1023, 0, 3);
+  int mappedSymbol = map (potentiometerValue, 0, 1023, 0, 19);
+  int mappedPourcentage = map (potentiometerValue, 0, 1023, 0, 100);
 
+  
   
   int valueButton = digitalRead(pinButton);
   
@@ -71,20 +59,15 @@ void loop() {
   }
 
 
-  if (currentTime - serialPrevious >= serialDelay) {
-    serialPrevious = currentTime;
-    if (valueButton == 0) {
-
-      for (int i = 0; i < 20; i++) {
-        if (i < mappedSymbol) {
-          Serial.print("#");
-        }
-        else {
-          Serial.print(".");
-        }
-      }   
-      Serial.print(mappedPourcentage);    
-      Serial.println(" % ");
+  if (valueButton == 0) {
+    if (currentTime - serialPrevious >= serialDelay) {
+      serialPrevious = currentTime;
+    
+      click(valueButton, mappedPourcentage, mappedSymbol);
+      //return;
     }
-  }  
+    else {
+      valueButton == 1; 
+    }
+  }
 }
